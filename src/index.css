@@ -6,36 +6,27 @@
 @plugin "@tailwindcss/typography";
 
 @theme inline {
-  --color-background: oklch(0.97 0.02 90);
-  /* warm beige */
-  --color-foreground: oklch(0.1 0 0);
-  /* deep black */
+  --color-background: oklch(0.97 0.01 90);
+  --color-foreground: oklch(0.13 0 0);
   --color-card: oklch(1 0 0);
-  /* white */
-  --color-card-foreground: oklch(0.1 0 0);
+  --color-card-foreground: oklch(0.13 0 0);
   --color-popover: oklch(1 0 0);
-  --color-popover-foreground: oklch(0.1 0 0);
+  --color-popover-foreground: oklch(0.13 0 0);
 
-  /* Brutalist loud colors */
-  --color-primary: oklch(0.75 0.15 130);
-  /* loud green */
-  --color-primary-foreground: oklch(0.1 0 0);
-  --color-secondary: oklch(0.8 0.15 320);
-  /* loud pink */
-  --color-secondary-foreground: oklch(0.1 0 0);
-  --color-muted: oklch(0.9 0.04 80);
-  --color-muted-foreground: oklch(0.4 0 0);
-  --color-accent: oklch(0.85 0.18 90);
-  /* loud yellow */
-  --color-accent-foreground: oklch(0.1 0 0);
-  --color-destructive: oklch(0.65 0.25 25);
-  /* bright red */
+  --color-primary: oklch(0.55 0.15 145);
+  --color-primary-foreground: oklch(1 0 0);
+  --color-secondary: oklch(0.94 0.02 260);
+  --color-secondary-foreground: oklch(0.25 0 0);
+  --color-muted: oklch(0.93 0.01 80);
+  --color-muted-foreground: oklch(0.45 0 0);
+  --color-accent: oklch(0.48 0.12 260);
+  --color-accent-foreground: oklch(1 0 0);
+  --color-destructive: oklch(0.58 0.22 25);
   --color-destructive-foreground: oklch(1 0 0);
 
-  --color-border: oklch(0.1 0 0);
-  /* thick black borders */
-  --color-input: oklch(0.1 0 0);
-  --color-ring: oklch(0.1 0 0);
+  --color-border: oklch(0.82 0 0);
+  --color-input: oklch(0.82 0 0);
+  --color-ring: oklch(0.55 0.15 145);
 
   --radius-sm: 0px;
   --radius-md: 0px;
@@ -45,9 +36,9 @@
   --font-sans: 'Space Grotesk', sans-serif;
   --font-mono: 'Space Mono', monospace;
 
-  --shadow-brutal: 4px 4px 0px 0px oklch(0.1 0 0);
-  --shadow-brutalHover: 6px 6px 0px 0px oklch(0.1 0 0);
-  --shadow-brutalActive: 2px 2px 0px 0px oklch(0.1 0 0);
+  --shadow-brutal: 3px 3px 0px 0px oklch(0.13 0 0);
+  --shadow-brutalHover: 5px 5px 0px 0px oklch(0.13 0 0);
+  --shadow-brutalActive: 1px 1px 0px 0px oklch(0.13 0 0);
 }
 
 @layer base {
@@ -56,24 +47,17 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+CiAgPGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMCwgMCwgMCwgMC4wNSkiLz4KPC9zdmc+')];
+    @apply bg-background text-foreground font-sans;
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    @apply font-bold uppercase tracking-tight;
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold tracking-tight;
   }
 }
 
-/* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 12px;
-  height: 12px;
-  border-left: 2px solid var(--color-border);
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -81,26 +65,27 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-primary);
-  border: 2px solid var(--color-border);
+  background: var(--color-border);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-accent);
+  background: var(--color-muted-foreground);
 }
 
-/* Utilities for brutalist interactions */
 @layer utilities {
   .brutal-card {
-    @apply border-2 border-border text-foreground bg-card shadow-brutal transition-all duration-200 hover:-translate-y-1 hover:-translate-x-1 hover:shadow-brutalHover active:translate-y-0.5 active:translate-x-0.5 active:shadow-brutalActive;
+    @apply border-2 border-border bg-card shadow-brutal;
+  }
+
+  .brutal-card-interactive {
+    @apply border-2 border-border bg-card shadow-brutal transition-all duration-150 hover:-translate-y-0.5 hover:shadow-brutalHover active:translate-y-0 active:shadow-brutalActive;
   }
 
   .brutal-btn {
-    @apply border-2 border-border shadow-brutal transition-transform duration-100 hover:-translate-y-0.5 hover:-translate-x-0.5 active:translate-y-0.5 active:translate-x-0.5 active:shadow-none font-bold uppercase cursor-pointer;
+    @apply border-2 border-border shadow-brutal transition-all duration-100 hover:-translate-y-0.5 active:translate-y-0 active:shadow-none font-bold uppercase cursor-pointer;
   }
 }
 
-/* Hide scrollbar completely utility */
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }

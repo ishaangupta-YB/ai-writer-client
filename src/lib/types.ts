@@ -40,16 +40,6 @@ export interface BlogResult {
   created_at: string;
 }
 
-export interface PastBlog {
-  id: string;
-  title: string;
-  slug: string;
-  created_at: string;
-  word_count: number;
-  has_images: boolean;
-  blog_kind: BlogKind;
-}
-
 export type ProgressEvent = {
   type: "progress";
   node: string;
@@ -61,7 +51,6 @@ export type ProgressEvent = {
     tasks_planned?: number;
     sections_done?: number;
     total_sections?: number;
-    images_planned?: number;
     current_step?: string;
   };
 };

@@ -1,22 +1,6 @@
-import { BlogResult, PastBlog, SSEEvent } from "./types";
+import { SSEEvent } from "./types";
 
-const API_BASE = "/api";
-
-export async function fetchPastBlogs(): Promise<PastBlog[]> {
-    const res = await fetch(`${API_BASE}/blogs`);
-    if (!res.ok) {
-        throw new Error("Failed to fetch past blogs");
-    }
-    return res.json();
-}
-
-export async function fetchBlogById(id: string): Promise<BlogResult> {
-    const res = await fetch(`${API_BASE}/blogs/${id}`);
-    if (!res.ok) {
-        throw new Error("Failed to fetch blog");
-    }
-    return res.json();
-}
+const API_BASE = import.meta.env.VITE_API_URL || "/api";
 
 export function startBlogGeneration(
     topic: string,
@@ -83,12 +67,4 @@ export function startBlogGeneration(
     return () => {
         controller.abort();
     };
-}
-
-export function getImageUrl(blogId: string, filename: string): string {
-    return `${API_BASE}/blogs/${blogId}/images/${filename}`;
-}
-
-export function getDownloadUrl(blogId: string, type: "markdown" | "images" | "bundle"): string {
-    return `${API_BASE}/blogs/${blogId}/download/${type}`;
 }
