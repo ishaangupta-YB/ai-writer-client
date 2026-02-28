@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import { ScrollArea } from "../ui/scroll-area";
 import { useGeneration } from "../../context/GenerationContext";
-import { Clock } from "lucide-react";
 import { cn } from "../../lib/utils";
 
 export function LogsTab() {
@@ -35,10 +34,7 @@ export function LogsTab() {
     return (
         <div className="max-w-4xl mx-auto h-[600px] flex flex-col brutal-card border-2 border-border overflow-hidden bg-card">
             <div className="flex items-center justify-between px-4 py-3 border-b-2 border-border bg-muted">
-                <div className="flex items-center gap-2 font-bold tracking-wider uppercase text-xs">
-                    <Clock className="w-3.5 h-3.5 text-primary" />
-                    Event Stream
-                </div>
+                <span className="font-bold tracking-wider uppercase text-xs">Event Stream</span>
                 <span className="text-xs font-mono text-muted-foreground">{logs.length} events</span>
             </div>
 

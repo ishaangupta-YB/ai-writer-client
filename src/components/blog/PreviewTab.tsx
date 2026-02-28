@@ -2,7 +2,6 @@ import { useState } from "react";
 import { BlogResult } from "../../lib/types";
 import { MarkdownRenderer } from "./MarkdownRenderer";
 import { format } from "date-fns";
-import { Calendar, Copy, Check, Download } from "lucide-react";
 import { Button } from "../ui/button";
 import { toast } from "sonner";
 
@@ -45,8 +44,7 @@ export function PreviewTab({ blog }: PreviewTabProps) {
                     <h2 className="text-2xl font-black tracking-tight truncate pb-1">
                         {blog.plan.blog_title}
                     </h2>
-                    <span className="flex items-center gap-2 text-xs font-mono text-muted-foreground">
-                        <Calendar className="h-3.5 w-3.5" />
+                    <span className="text-xs font-mono text-muted-foreground">
                         {format(new Date(blog.created_at), "MMMM d, yyyy")}
                     </span>
                 </div>
@@ -58,7 +56,6 @@ export function PreviewTab({ blog }: PreviewTabProps) {
                         onClick={handleCopy}
                         className="brutal-btn text-xs"
                     >
-                        {copied ? <Check className="mr-1.5 h-3.5 w-3.5" /> : <Copy className="mr-1.5 h-3.5 w-3.5" />}
                         {copied ? "Copied" : "Copy MD"}
                     </Button>
                     <Button
@@ -67,7 +64,6 @@ export function PreviewTab({ blog }: PreviewTabProps) {
                         onClick={handleDownload}
                         className="brutal-btn text-xs"
                     >
-                        <Download className="mr-1.5 h-3.5 w-3.5" />
                         Download
                     </Button>
                 </div>

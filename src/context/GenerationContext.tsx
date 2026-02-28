@@ -5,7 +5,7 @@ import { useAppContext } from "./AppContext";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
-export type GenerationState = {
+type GenerationState = {
     isGenerating: boolean;
     statusText: string;
     progress: number;

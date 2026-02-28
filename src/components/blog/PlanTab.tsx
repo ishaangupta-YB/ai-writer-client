@@ -3,17 +3,17 @@ import { CardTitle } from "../ui/card";
 import { Badge } from "../ui/badge";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "../ui/table";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "../ui/accordion";
-import { Check, X } from "lucide-react";
-
 interface PlanTabProps {
     plan: BlogResult["plan"];
 }
 
+function BoolIcon({ value }: { value: boolean }) {
+    return value
+        ? <div className="mx-auto w-5 h-5 flex items-center justify-center bg-primary text-primary-foreground text-[10px] font-black">Y</div>
+        : <div className="mx-auto w-5 h-5 flex items-center justify-center bg-muted text-muted-foreground text-[10px] font-black">N</div>;
+}
+
 export function PlanTab({ plan }: PlanTabProps) {
-    const BoolIcon = ({ value }: { value: boolean }) =>
-        value
-            ? <div className="mx-auto w-5 h-5 flex items-center justify-center bg-primary text-primary-foreground"><Check className="h-3.5 w-3.5 stroke-[3px]" /></div>
-            : <div className="mx-auto w-5 h-5 flex items-center justify-center bg-muted text-muted-foreground"><X className="h-3 w-3 stroke-[3px]" /></div>;
 
     return (
         <div className="space-y-8 max-w-4xl mx-auto animate-in fade-in duration-300 pb-8">

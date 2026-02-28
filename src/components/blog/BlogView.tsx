@@ -1,19 +1,15 @@
 import { useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useGeneration } from "../../context/GenerationContext";
 import { useAppContext } from "../../context/AppContext";
 
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../ui/tabs";
-import { GenerationProgress } from "../generation/GenerationProgress";
 import { PlanTab } from "./PlanTab";
 import { EvidenceTab } from "./EvidenceTab";
 import { PreviewTab } from "./PreviewTab";
 import { LogsTab } from "./LogsTab";
 
-import { LayoutList, Search, FileText, ScrollText } from "lucide-react";
-
 export function BlogView() {
-    const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
     const { isGenerating } = useGeneration();
     const { currentBlog } = useAppContext();
@@ -23,10 +19,6 @@ export function BlogView() {
             navigate("/", { replace: true });
         }
     }, [currentBlog, isGenerating, navigate]);
-
-    if (isGenerating) {
-        return <GenerationProgress />;
-    }
 
     if (!currentBlog) {
         return null;
@@ -38,19 +30,15 @@ export function BlogView() {
                 <div className="flex justify-center mb-6">
                     <TabsList className="flex w-full max-w-[600px] h-12 p-1.5 bg-muted border-2 border-border shadow-brutal gap-1">
                         <TabsTrigger value="plan" className="flex-1 border border-transparent data-[state=active]:border-border data-[state=active]:bg-card data-[state=active]:shadow-brutal font-bold uppercase tracking-wider text-xs transition-all hover:bg-card/50">
-                            <LayoutList className="h-3.5 w-3.5 mr-1.5 hidden sm:inline-block" />
                             Plan
                         </TabsTrigger>
                         <TabsTrigger value="evidence" className="flex-1 border border-transparent data-[state=active]:border-border data-[state=active]:bg-card data-[state=active]:shadow-brutal font-bold uppercase tracking-wider text-xs transition-all hover:bg-card/50">
-                            <Search className="h-3.5 w-3.5 mr-1.5 hidden sm:inline-block" />
                             Evidence
                         </TabsTrigger>
                         <TabsTrigger value="preview" className="flex-1 border border-transparent data-[state=active]:border-border data-[state=active]:bg-card data-[state=active]:shadow-brutal font-bold uppercase tracking-wider text-xs transition-all hover:bg-card/50">
-                            <FileText className="h-3.5 w-3.5 mr-1.5 hidden sm:inline-block" />
                             Preview
                         </TabsTrigger>
                         <TabsTrigger value="logs" className="flex-1 border border-transparent data-[state=active]:border-border data-[state=active]:bg-card data-[state=active]:shadow-brutal font-bold uppercase tracking-wider text-xs transition-all hover:bg-card/50">
-                            <ScrollText className="h-3.5 w-3.5 mr-1.5 hidden sm:inline-block" />
                             Logs
                         </TabsTrigger>
                     </TabsList>

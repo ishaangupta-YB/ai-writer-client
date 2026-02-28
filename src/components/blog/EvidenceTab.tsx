@@ -2,7 +2,6 @@ import { BlogResult } from "../../lib/types";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "../ui/card";
 import { Badge } from "../ui/badge";
 import { formatDate } from "../../lib/utils";
-import { ExternalLink, Globe, Info } from "lucide-react";
 
 interface EvidenceTabProps {
     evidence: BlogResult["evidence"] | undefined;
@@ -13,7 +12,6 @@ export function EvidenceTab({ evidence, mode }: EvidenceTabProps) {
     if (!evidence || evidence.length === 0) {
         return (
             <div className="max-w-3xl mx-auto mt-8 brutal-card bg-card border-2 border-border p-8 text-center animate-in fade-in duration-300">
-                <Info className="h-6 w-6 text-muted-foreground mx-auto mb-3" />
                 <h3 className="font-bold mb-1">No sources available</h3>
                 <p className="text-sm text-muted-foreground">
                     {mode === "closed_book"
@@ -33,10 +31,7 @@ export function EvidenceTab({ evidence, mode }: EvidenceTabProps) {
     return (
         <div className="space-y-6 max-w-4xl mx-auto animate-in fade-in duration-300 pb-8">
             <div className="flex items-center justify-between border-b border-border pb-4">
-                <h3 className="text-xl font-bold flex items-center gap-2">
-                    <Globe className="h-5 w-5 text-primary" />
-                    Sources
-                </h3>
+                <h3 className="text-xl font-bold">Sources</h3>
                 <Badge variant="outline" className="font-mono text-xs border-border">
                     {evidence.length} sources
                 </Badge>
@@ -52,10 +47,9 @@ export function EvidenceTab({ evidence, mode }: EvidenceTabProps) {
                                         href={item.url}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="text-foreground hover:text-primary transition-colors flex items-center gap-2"
+                                        className="text-foreground hover:text-primary transition-colors"
                                     >
                                         {item.title || item.url}
-                                        <ExternalLink className="h-3.5 w-3.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
                                     </a>
                                 </CardTitle>
                                 <span className="text-xs font-mono text-muted-foreground shrink-0">
