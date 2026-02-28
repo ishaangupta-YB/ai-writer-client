@@ -5,13 +5,12 @@ Deploy the React SPA to AWS S3 + CloudFront (with Origin Access Control).
 ## Architecture
 
 ```
-Browser → CloudFront (HTTPS) → S3 bucket (private, OAC) → static files (index.html, JS, CSS)
-                                   ↓
-                           API calls go to:
-                           ALB (HTTP:80) → ECS Fargate (port 8000)
+Browser → CloudFront (HTTPS)
+             ├── /*        → S3 bucket (private, OAC) → static files (index.html, JS, CSS)
+             └── /api/*    → ALB (HTTP:80) → ECS Fargate (port 8000) → Bedrock / Tavily
 ```
 
-The frontend is a static single-page app. CloudFront serves it over HTTPS from a private S3 bucket. API requests go directly from the browser to the backend ALB.
+CloudFront serves both the static frontend and proxies API calls to the backend ALB. The browser only talks to one HTTPS origin — no mixed content, no CORS needed.
 
 ## Prerequisites
 
@@ -171,17 +170,65 @@ aws s3api put-bucket-policy \
   }"
 ```
 
-### 5. Update Backend CORS
+### 5. Add ALB as Second CloudFront Origin
 
-After getting the CloudFront URL, redeploy the backend with strict CORS:
+Route `/api/*` requests through CloudFront to the backend ALB. This avoids mixed content (HTTPS→HTTP) and eliminates CORS entirely (same origin).
+
+```bash
+# Get current config, add ALB origin + /api/* cache behavior, then update
+DIST_ID="YOUR_DISTRIBUTION_ID"
+ALB_DNS="YOUR_ALB_DNS"  # e.g. blog-writer-alb-1234567890.us-east-1.elb.amazonaws.com
+
+ETAG=$(aws cloudfront get-distribution-config --id "$DIST_ID" --query 'ETag' --output text)
+
+aws cloudfront update-distribution --id "$DIST_ID" --if-match "$ETAG" \
+  --distribution-config "$(aws cloudfront get-distribution-config --id "$DIST_ID" \
+    --query 'DistributionConfig' --output json | python3 -c "
+import sys, json
+config = json.load(sys.stdin)
+config['Origins']['Items'].append({
+    'Id': 'ALB-blog-writer-backend',
+    'DomainName': '$ALB_DNS',
+    'OriginPath': '',
+    'CustomHeaders': {'Quantity': 0},
+    'CustomOriginConfig': {
+        'HTTPPort': 80, 'HTTPSPort': 443,
+        'OriginProtocolPolicy': 'http-only',
+        'OriginSslProtocols': {'Quantity': 1, 'Items': ['TLSv1.2']},
+        'OriginReadTimeout': 60, 'OriginKeepaliveTimeout': 5
+    },
+    'ConnectionAttempts': 3, 'ConnectionTimeout': 10,
+    'OriginShield': {'Enabled': False}
+})
+config['Origins']['Quantity'] = 2
+config['CacheBehaviors'] = {'Quantity': 1, 'Items': [{
+    'PathPattern': '/api/*',
+    'TargetOriginId': 'ALB-blog-writer-backend',
+    'TrustedSigners': {'Enabled': False, 'Quantity': 0},
+    'TrustedKeyGroups': {'Enabled': False, 'Quantity': 0},
+    'ViewerProtocolPolicy': 'redirect-to-https',
+    'AllowedMethods': {'Quantity': 7, 'Items': ['HEAD','DELETE','POST','GET','OPTIONS','PUT','PATCH'], 'CachedMethods': {'Quantity': 2, 'Items': ['HEAD','GET']}},
+    'SmoothStreaming': False, 'Compress': False,
+    'LambdaFunctionAssociations': {'Quantity': 0},
+    'FunctionAssociations': {'Quantity': 0},
+    'FieldLevelEncryptionId': '',
+    'GrpcConfig': {'Enabled': False},
+    'ForwardedValues': {'QueryString': True, 'Cookies': {'Forward': 'all'}, 'Headers': {'Quantity': 5, 'Items': ['Accept','Content-Type','Origin','Referer','Authorization']}, 'QueryStringCacheKeys': {'Quantity': 0}},
+    'MinTTL': 0, 'DefaultTTL': 0, 'MaxTTL': 0
+}]}
+print(json.dumps(config))
+")" --no-cli-pager
+```
+
+### 6. Update Backend CORS
+
+Redeploy the backend with the CloudFront URL as the allowed CORS origin (defense-in-depth — blocks direct ALB access from unauthorized origins):
 
 ```bash
 cd ../server/infra
 
 CORS_ORIGINS=https://YOUR_CLOUDFRONT_DOMAIN.cloudfront.net ./deploy.sh YOUR_ACCOUNT_ID
 ```
-
-This ensures only your frontend can call the backend API.
 
 ---
 
@@ -195,11 +242,11 @@ cd client
 # Install dependencies
 npm install
 
-# Build with the backend ALB URL
-VITE_API_URL=http://YOUR_ALB_DNS/api npm run build
+# Build (uses default VITE_API_URL=/api from .env — no override needed)
+npm run build
 ```
 
-> **`VITE_API_URL`** is baked into the JS bundle at build time (Vite replaces `import.meta.env.VITE_API_URL`). You must rebuild if the backend URL changes.
+> **`VITE_API_URL`** defaults to `/api` which works because CloudFront proxies `/api/*` to the ALB. No full URL needed.
 
 ### Upload to S3
 
@@ -230,8 +277,8 @@ aws cloudfront create-invalidation \
 ```bash
 cd client
 
-# 1. Build
-VITE_API_URL=http://YOUR_ALB_DNS/api npm run build
+# 1. Build (default VITE_API_URL=/api works with CloudFront proxy)
+npm run build
 
 # 2. Upload
 aws s3 sync dist/ s3://YOUR_BUCKET_NAME/ --delete
@@ -244,12 +291,13 @@ aws cloudfront create-invalidation --distribution-id YOUR_DIST_ID --paths "/*"
 
 ## Environment Variables
 
-| Variable | Description | When |
-|----------|-------------|------|
-| `VITE_API_URL` | Backend API base URL (e.g. `http://your-alb-dns.amazonaws.com/api`) | Build time only |
+| Variable | Description | Default | When |
+|----------|-------------|---------|------|
+| `VITE_API_URL` | API base path | `/api` | Build time only |
 
-- In development, `VITE_API_URL` defaults to `/api` (proxied by Vite dev server to `localhost:8000`)
-- In production, set it to the full ALB URL when running `npm run build`
+- In development, Vite proxies `/api/*` to `localhost:8000`
+- In production, CloudFront proxies `/api/*` to the ALB
+- The default `/api` works for both — **no override needed**
 - This value is **baked into the JS bundle** — changing it requires a rebuild + redeploy
 
 ---
@@ -280,12 +328,14 @@ aws s3api get-bucket-policy --bucket YOUR_BUCKET_NAME --output text | python3 -m
 # CloudFront shows old content — invalidate cache
 aws cloudfront create-invalidation --distribution-id YOUR_DIST_ID --paths "/*"
 
-# API calls fail (CORS error in browser console)
-# → Backend CORS_ORIGINS doesn't match the CloudFront URL
-# → Redeploy backend: CORS_ORIGINS=https://YOUR_CF_DOMAIN ./deploy.sh YOUR_ACCOUNT_ID
+# API calls fail (502/504 from CloudFront)
+# → ALB origin not added to CloudFront, or ALB is down
+# → Check: aws cloudfront get-distribution --id YOUR_DIST_ID --query 'Distribution.DistributionConfig.Origins'
+# → Check backend: curl http://YOUR_ALB_DNS/health
 
-# API calls fail (network error)
-# → VITE_API_URL was wrong at build time → rebuild with correct URL
+# API calls fail (CORS error — should not happen with CloudFront proxy)
+# → Likely hitting ALB directly instead of through CloudFront
+# → Verify VITE_API_URL=/api in the build (relative path, not full ALB URL)
 
 # Check CloudFront distribution status
 aws cloudfront get-distribution --id YOUR_DIST_ID \
