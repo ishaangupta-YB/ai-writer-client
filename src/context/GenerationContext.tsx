@@ -77,9 +77,12 @@ export function GenerationProvider({ children }: { children: ReactNode }) {
                     }];
 
                     const blog = event.data as BlogResult;
-                    dispatch({ type: "SET_CURRENT_BLOG", payload: blog });
-                    toast.success("Blog generated successfully!");
-                    navigate(`/blog/${blog.id}`);
+                    // Defer side effects out of setState to avoid React warning
+                    queueMicrotask(() => {
+                        dispatch({ type: "SET_CURRENT_BLOG", payload: blog });
+                        toast.success("Blog generated successfully!");
+                        navigate(`/blog/${blog.id}`);
+                    });
                 } else if (event.type === "error") {
                     next.isGenerating = false;
                     next.statusText = "Error generating blog";

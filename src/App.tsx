@@ -7,7 +7,7 @@ import { Toaster } from "sonner";
 import { GenerationProgress } from "./components/generation/GenerationProgress";
 import { useState, useRef, useCallback } from "react";
 import { format } from "date-fns";
-import { Button } from "./components/ui/button";
+import { Button as StatefulButton } from "./components/ui/stateful-button";
 import { Textarea } from "./components/ui/textarea";
 import { Separator } from "./components/ui/separator";
 import { cn } from "./lib/utils";
@@ -78,13 +78,14 @@ function HomeView() {
                   disabled={phase === "exiting"}
                   autoFocus={false}
                 />
-                <Button
-                  type="submit"
-                  className="w-full sm:w-auto brutal-btn h-11 px-6 bg-primary text-primary-foreground hover:bg-primary/90"
+                <StatefulButton
+                  type="button"
+                  className="w-full sm:w-auto h-11 px-6"
                   disabled={!topic.trim() || phase === "exiting"}
+                  onClick={handleGenerate}
                 >
                   Generate
-                </Button>
+                </StatefulButton>
               </div>
               <p className="text-xs font-mono text-muted-foreground mt-3 ml-1">
                 Press{" "}
