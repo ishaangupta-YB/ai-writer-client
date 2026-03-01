@@ -8,6 +8,8 @@ import { PlanTab } from "./PlanTab";
 import { EvidenceTab } from "./EvidenceTab";
 import { PreviewTab } from "./PreviewTab";
 import { LogsTab } from "./LogsTab";
+import { ResultBackground } from "./ResultBackground";
+import { motion, AnimatePresence } from "framer-motion";
 
 export function BlogView() {
     const navigate = useNavigate();
@@ -24,41 +26,65 @@ export function BlogView() {
         return null;
     }
 
-    return (
-        <div className="flex h-full w-full flex-col px-4 sm:px-8 py-6 max-w-[1200px] mx-auto overflow-hidden animate-in fade-in duration-500">
-            <Tabs defaultValue="preview" className="flex flex-col h-full w-full">
-                <div className="flex justify-center mb-6">
-                    <TabsList className="flex w-full max-w-[600px] h-12 p-1.5 bg-muted border-2 border-border shadow-brutal gap-1">
-                        <TabsTrigger value="plan" className="flex-1 border border-transparent data-[state=active]:border-border data-[state=active]:bg-card data-[state=active]:shadow-brutal font-bold uppercase tracking-wider text-xs transition-all hover:bg-card/50">
-                            Plan
-                        </TabsTrigger>
-                        <TabsTrigger value="evidence" className="flex-1 border border-transparent data-[state=active]:border-border data-[state=active]:bg-card data-[state=active]:shadow-brutal font-bold uppercase tracking-wider text-xs transition-all hover:bg-card/50">
-                            Evidence
-                        </TabsTrigger>
-                        <TabsTrigger value="preview" className="flex-1 border border-transparent data-[state=active]:border-border data-[state=active]:bg-card data-[state=active]:shadow-brutal font-bold uppercase tracking-wider text-xs transition-all hover:bg-card/50">
-                            Preview
-                        </TabsTrigger>
-                        <TabsTrigger value="logs" className="flex-1 border border-transparent data-[state=active]:border-border data-[state=active]:bg-card data-[state=active]:shadow-brutal font-bold uppercase tracking-wider text-xs transition-all hover:bg-card/50">
-                            Logs
-                        </TabsTrigger>
-                    </TabsList>
-                </div>
+    const ScrollTabsHeader = (
+        <TabsList className="flex w-full max-w-[600px] h-8 sm:h-12 bg-transparent p-0 gap-0 sm:gap-2">
+            <TabsTrigger
+                value="plan"
+                className="flex-1 border-none shadow-none bg-transparent data-[state=active]:bg-primary/10 data-[state=active]:text-primary font-display font-bold uppercase tracking-widest text-[8px] sm:text-xs transition-colors hover:bg-black/5 rounded px-1 sm:px-3 whitespace-nowrap"
+            >
+                Overview
+            </TabsTrigger>
+            <TabsTrigger
+                value="evidence"
+                className="flex-1 border-none shadow-none bg-transparent data-[state=active]:bg-primary/10 data-[state=active]:text-primary font-display font-bold uppercase tracking-widest text-[8px] sm:text-xs transition-colors hover:bg-black/5 rounded px-1 sm:px-3 whitespace-nowrap"
+            >
+                Research
+            </TabsTrigger>
+            <TabsTrigger
+                value="preview"
+                className="flex-1 border-none shadow-none bg-transparent data-[state=active]:bg-primary/10 data-[state=active]:text-primary font-display font-bold uppercase tracking-widest text-[8px] sm:text-xs transition-colors hover:bg-black/5 rounded px-1 sm:px-3 whitespace-nowrap"
+            >
+                Chronicle
+            </TabsTrigger>
+            <TabsTrigger
+                value="logs"
+                className="flex-1 border-none shadow-none bg-transparent data-[state=active]:bg-primary/10 data-[state=active]:text-primary font-display font-bold uppercase tracking-widest text-[8px] sm:text-xs transition-colors hover:bg-black/5 rounded px-1 sm:px-3 whitespace-nowrap"
+            >
+                Ledger
+            </TabsTrigger>
+        </TabsList>
+    );
 
-                <div className="flex-1 overflow-y-auto w-full pb-8 hide-scrollbar">
-                    <TabsContent value="plan" className="mt-0 h-full border-none p-0 outline-none">
-                        <PlanTab plan={currentBlog.plan} />
-                    </TabsContent>
-                    <TabsContent value="evidence" className="mt-0 h-full border-none p-0 outline-none">
-                        <EvidenceTab evidence={currentBlog.evidence} mode={currentBlog.plan.blog_kind} />
-                    </TabsContent>
-                    <TabsContent value="preview" className="mt-0 h-full border-none p-0 outline-none">
-                        <PreviewTab blog={currentBlog} />
-                    </TabsContent>
-                    <TabsContent value="logs" className="mt-0 h-full border-none p-0 outline-none">
-                        <LogsTab />
-                    </TabsContent>
+    return (
+        <Tabs defaultValue="preview" className="flex flex-col h-full w-full">
+            <ResultBackground headerContent={ScrollTabsHeader} className="px-0 py-0">
+                <div className="flex-1 w-full pt-6">
+                    <div className="max-w-[900px] mx-auto px-4 sm:px-8 pb-16 min-h-full">
+                        <AnimatePresence mode="wait">
+                            <TabsContent key="plan" value="plan" className="mt-0 h-full border-none p-0 outline-none data-[state=inactive]:hidden">
+                                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.3 }}>
+                                    <PlanTab plan={currentBlog.plan} />
+                                </motion.div>
+                            </TabsContent>
+                            <TabsContent key="evidence" value="evidence" className="mt-0 h-full border-none p-0 outline-none data-[state=inactive]:hidden">
+                                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.3 }}>
+                                    <EvidenceTab evidence={currentBlog.evidence} mode={currentBlog.plan.blog_kind} />
+                                </motion.div>
+                            </TabsContent>
+                            <TabsContent key="preview" value="preview" className="mt-0 h-full border-none p-0 outline-none data-[state=inactive]:hidden">
+                                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.3 }}>
+                                    <PreviewTab blog={currentBlog} />
+                                </motion.div>
+                            </TabsContent>
+                            <TabsContent key="logs" value="logs" className="mt-0 h-full border-none p-0 outline-none data-[state=inactive]:hidden">
+                                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.3 }}>
+                                    <LogsTab />
+                                </motion.div>
+                            </TabsContent>
+                        </AnimatePresence>
+                    </div>
                 </div>
-            </Tabs>
-        </div>
+            </ResultBackground>
+        </Tabs>
     );
 }

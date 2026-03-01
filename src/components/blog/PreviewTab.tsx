@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { BlogResult } from "../../lib/types";
 import { MarkdownRenderer } from "./MarkdownRenderer";
-import { format } from "date-fns";
 import { Button } from "../ui/button";
 import { toast } from "sonner";
+import { Copy, Check } from "lucide-react";
 
 interface PreviewTabProps {
     blog: BlogResult;
@@ -23,56 +23,29 @@ export function PreviewTab({ blog }: PreviewTabProps) {
         }
     };
 
-    const handleDownload = () => {
-        const blob = new Blob([blog.final_markdown], { type: "text/markdown;charset=utf-8" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `${blog.plan.blog_title.replace(/[^a-zA-Z0-9\s-]/g, "").replace(/\s+/g, "-").toLowerCase()}.md`;
-        document.body.appendChild(a);
-        a.click();
-        URL.revokeObjectURL(url);
-        document.body.removeChild(a);
-        toast.success("Markdown downloaded!");
-    };
+
 
     return (
-        <div className="flex flex-col h-full brutal-card bg-card border-2 border-border overflow-hidden animate-in fade-in duration-300">
-            {/* Header */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-6 border-b-2 border-border bg-card">
-                <div className="flex-1 min-w-0">
-                    <h2 className="text-2xl font-black tracking-tight truncate pb-1">
-                        {blog.plan.blog_title}
-                    </h2>
-                    <span className="text-xs font-mono text-muted-foreground">
-                        {format(new Date(blog.created_at), "MMMM d, yyyy")}
-                    </span>
-                </div>
-
-                <div className="flex items-center gap-2 shrink-0">
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={handleCopy}
-                        className="brutal-btn text-xs"
-                    >
-                        {copied ? "Copied" : "Copy MD"}
-                    </Button>
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={handleDownload}
-                        className="brutal-btn text-xs"
-                    >
-                        Download
-                    </Button>
-                </div>
-            </div>
-
+        <div className="flex flex-col h-full bg-transparent animate-in fade-in duration-500 relative group w-full">
             {/* Content */}
-            <div className="flex-1 p-6 sm:p-10 overflow-y-auto">
-                <div className="max-w-3xl mx-auto">
-                    <MarkdownRenderer content={blog.final_markdown} />
+            <div className="flex-1 p-2 sm:p-8 w-full">
+
+                <div className="max-w-3xl mx-auto relative group/prose">
+                    <div className="absolute top-2 right-2 sm:-right-4 md:-right-12 z-10 opacity-60 hover:opacity-100 transition-opacity">
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={handleCopy}
+                            className="h-8 w-8 rounded-full bg-background/50 backdrop-blur-sm border border-primary/20 text-primary hover:bg-primary/10 hover:text-primary transition-all shadow-sm"
+                            title="Copy Scroll"
+                        >
+                            {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                        </Button>
+                    </div>
+
+                    <div className="prose prose-stone lg:prose-lg prose-headings:font-display prose-headings:text-primary prose-p:font-serif prose-p:text-foreground/90 prose-a:text-primary min-w-full">
+                        <MarkdownRenderer content={blog.final_markdown} />
+                    </div>
                 </div>
             </div>
         </div>

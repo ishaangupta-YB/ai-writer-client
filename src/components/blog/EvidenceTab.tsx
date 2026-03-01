@@ -11,12 +11,17 @@ interface EvidenceTabProps {
 export function EvidenceTab({ evidence, mode }: EvidenceTabProps) {
     if (!evidence || evidence.length === 0) {
         return (
-            <div className="max-w-3xl mx-auto mt-8 brutal-card bg-card border-2 border-border p-8 text-center animate-in fade-in duration-300">
-                <h3 className="font-bold mb-1">No sources available</h3>
-                <p className="text-sm text-muted-foreground">
+            <div className="max-w-2xl mx-auto mt-12 sm:mt-24 flex flex-col items-center justify-center text-center animate-in fade-in duration-700 px-4">
+                <div className="w-12 h-12 mb-6 opacity-40">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" className="w-full h-full text-primary">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+                    </svg>
+                </div>
+                <h3 className="font-display text-primary text-2xl mb-4 tracking-wide">The Archives Sleep</h3>
+                <p className="text-lg font-serif italic text-muted-foreground/80 max-w-md leading-relaxed">
                     {mode === "closed_book"
-                        ? "This blog was generated in closed-book mode without web research."
-                        : "No web sources were found for this topic."}
+                        ? "This chronicle was scribed directly from the agent's vast repository of knowledge, requiring no external scrolls."
+                        : "No external ledgers were required. This manuscript was woven from pure thought and memory."}
                 </p>
             </div>
         );
@@ -29,20 +34,20 @@ export function EvidenceTab({ evidence, mode }: EvidenceTabProps) {
     });
 
     return (
-        <div className="space-y-6 max-w-4xl mx-auto animate-in fade-in duration-300 pb-8">
-            <div className="flex items-center justify-between border-b border-border pb-4">
-                <h3 className="text-xl font-bold">Sources</h3>
-                <Badge variant="outline" className="font-mono text-xs border-border">
-                    {evidence.length} sources
+        <div className="space-y-6 max-w-4xl mx-auto animate-in fade-in duration-500 pb-8 px-2 sm:px-0">
+            <div className="flex items-center justify-between border-b border-primary/20 pb-4">
+                <h3 className="text-2xl font-display text-primary tracking-wide">Research Ledgers</h3>
+                <Badge variant="outline" className="font-display tracking-widest uppercase text-[10px] border-primary/30 text-primary bg-primary/5">
+                    {evidence.length} scrolls
                 </Badge>
             </div>
 
             <div className="grid gap-4">
                 {sortedEvidence.map((item, i) => (
-                    <Card key={i} className="brutal-card bg-card border-2 border-border overflow-hidden group">
+                    <Card key={i} className="bg-transparent border border-primary/20 rounded-lg overflow-hidden group hover:bg-primary/5 transition-colors shadow-none">
                         <CardHeader className="p-4 sm:p-5 pb-3">
                             <div className="flex flex-col sm:flex-row justify-between items-start gap-2">
-                                <CardTitle className="text-base font-bold leading-tight">
+                                <CardTitle className="text-base font-serif font-semibold leading-tight text-primary/90">
                                     <a
                                         href={item.url}
                                         target="_blank"

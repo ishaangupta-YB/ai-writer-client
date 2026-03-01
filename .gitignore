@@ -30,3 +30,6 @@ skills-lock.json
 
 # Cloudflare
 .wrangler
+
+src/assets/landingbg.png
+src/assets/resultbg.png

@@ -16,26 +16,26 @@ function BoolIcon({ value }: { value: boolean }) {
 export function PlanTab({ plan }: PlanTabProps) {
 
     return (
-        <div className="space-y-8 max-w-4xl mx-auto animate-in fade-in duration-300 pb-8">
+        <div className="space-y-8 max-w-4xl mx-auto animate-in fade-in duration-500 pb-8 px-2 sm:px-0">
             {/* Header */}
-            <div className="brutal-card bg-card border-2 border-border p-6 sm:p-8">
-                <div className="border-b border-border pb-6 mb-6">
-                    <Badge variant="outline" className="text-xs uppercase font-bold border border-border bg-muted mb-3">
-                        Blog Plan
+            <div className="bg-transparent border-b border-primary/20 p-4 sm:p-6 mb-4">
+                <div className="pb-4 sm:pb-6 mb-4 sm:mb-6">
+                    <Badge variant="outline" className="font-display text-[10px] uppercase tracking-widest border-primary/30 bg-primary/5 text-primary mb-3">
+                        Scroll Plan
                     </Badge>
-                    <CardTitle className="text-3xl md:text-4xl font-black tracking-tight leading-tight mb-4">
+                    <CardTitle className="text-2xl sm:text-4xl font-display font-medium text-primary tracking-wide leading-tight mb-4 text-wrap">
                         {plan.blog_title}
                     </CardTitle>
 
-                    <div className="flex flex-wrap items-center gap-3 text-sm">
-                        <span className="font-mono bg-muted px-2 py-1 border border-border">
-                            <span className="text-muted-foreground">Kind:</span> <span className="font-bold uppercase">{plan.blog_kind.replace("_", " ")}</span>
+                    <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs sm:text-sm">
+                        <span className="font-serif italic text-foreground/80 px-2 py-1 bg-primary/5 border border-primary/10 rounded">
+                            <span className="text-muted-foreground mr-1">Kind:</span> <span className="font-semibold uppercase tracking-wider">{plan.blog_kind.replace("_", " ")}</span>
                         </span>
-                        <span className="font-mono bg-muted px-2 py-1 border border-border">
-                            <span className="text-muted-foreground">Audience:</span> <span className="font-bold">{plan.audience}</span>
+                        <span className="font-serif italic text-foreground/80 px-2 py-1 bg-primary/5 border border-primary/10 rounded">
+                            <span className="text-muted-foreground mr-1">Audience:</span> <span className="font-semibold">{plan.audience}</span>
                         </span>
-                        <span className="font-mono bg-muted px-2 py-1 border border-border">
-                            <span className="text-muted-foreground">Tone:</span> <span className="font-bold">{plan.tone}</span>
+                        <span className="font-serif italic text-foreground/80 px-2 py-1 bg-primary/5 border border-primary/10 rounded">
+                            <span className="text-muted-foreground mr-1">Tone:</span> <span className="font-semibold">{plan.tone}</span>
                         </span>
                     </div>
                 </div>
@@ -56,10 +56,10 @@ export function PlanTab({ plan }: PlanTabProps) {
             </div>
 
             {/* Tasks Table */}
-            <div className="brutal-card bg-card border-2 border-border overflow-hidden">
-                <div className="bg-muted px-4 sm:px-6 py-3 flex justify-between items-center border-b-2 border-border">
-                    <CardTitle className="text-sm font-bold uppercase tracking-wider">Sections</CardTitle>
-                    <span className="font-mono text-xs text-muted-foreground">{plan.tasks.length} tasks</span>
+            <div className="bg-transparent border border-primary/20 rounded-lg overflow-hidden">
+                <div className="bg-primary/5 px-4 sm:px-6 py-4 flex justify-between items-center border-b border-primary/20">
+                    <CardTitle className="font-display text-sm tracking-widest uppercase text-primary">Sections</CardTitle>
+                    <span className="font-serif italic text-sm text-primary/80">{plan.tasks.length} tasks</span>
                 </div>
 
                 <div className="overflow-x-auto">
@@ -102,13 +102,13 @@ export function PlanTab({ plan }: PlanTabProps) {
 
             {/* Accordion Details */}
             <div className="space-y-4">
-                <h3 className="text-lg font-bold tracking-tight">Section Details</h3>
+                <h3 className="text-xl font-display text-primary tracking-wide">Section Details</h3>
                 <Accordion type="multiple" className="w-full space-y-2">
                     {plan.tasks.map((task, i) => (
-                        <AccordionItem key={task.id} value={task.id.toString()} className="border-2 border-border bg-card data-[state=open]:shadow-brutal transition-all">
-                            <AccordionTrigger className="hover:no-underline hover:bg-muted/50 px-4 py-3 transition-colors">
+                        <AccordionItem key={task.id} value={task.id.toString()} className="border border-primary/20 bg-transparent mb-2 rounded overflow-hidden data-[state=open]:bg-primary/5 transition-all">
+                            <AccordionTrigger className="hover:no-underline hover:bg-primary/5 px-3 sm:px-4 py-3 sm:py-4 transition-colors">
                                 <div className="flex items-center gap-3 text-left">
-                                    <span className="bg-muted font-bold text-sm w-7 h-7 flex items-center justify-center border border-border shrink-0">
+                                    <span className="bg-primary/10 text-primary font-display border border-primary/20 rounded text-sm w-7 h-7 flex items-center justify-center shrink-0">
                                         {i + 1}
                                     </span>
                                     <div>

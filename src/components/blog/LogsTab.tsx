@@ -13,8 +13,8 @@ export function LogsTab() {
 
     if (logs.length === 0) {
         return (
-            <div className="flex h-[400px] items-center justify-center brutal-card bg-card border-2 border-border max-w-4xl mx-auto">
-                <p className="font-mono text-sm text-muted-foreground">No telemetry data available.</p>
+            <div className="flex h-[400px] items-center justify-center bg-transparent border border-primary/20 rounded-lg max-w-4xl mx-auto">
+                <p className="font-serif italic text-sm text-muted-foreground/80">No telemetry data available.</p>
             </div>
         );
     }
@@ -32,10 +32,10 @@ export function LogsTab() {
     };
 
     return (
-        <div className="max-w-4xl mx-auto h-[600px] flex flex-col brutal-card border-2 border-border overflow-hidden bg-card">
-            <div className="flex items-center justify-between px-4 py-3 border-b-2 border-border bg-muted">
-                <span className="font-bold tracking-wider uppercase text-xs">Event Stream</span>
-                <span className="text-xs font-mono text-muted-foreground">{logs.length} events</span>
+        <div className="max-w-4xl mx-auto h-[600px] flex flex-col border border-primary/20 rounded-lg overflow-hidden bg-transparent mb-8">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-primary/20 bg-primary/5">
+                <span className="font-display tracking-widest uppercase text-[10px] text-primary">Event Stream</span>
+                <span className="text-xs font-serif italic text-primary/80">{logs.length} events</span>
             </div>
 
             <ScrollArea className="flex-1 w-full p-4 font-mono text-sm">
@@ -44,11 +44,13 @@ export function LogsTab() {
                         const d = new Date(log.timestamp);
                         const time = d.toLocaleTimeString([], { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' }) + '.' + String(d.getMilliseconds()).padStart(3, '0');
                         return (
-                            <div key={i} className="flex items-start gap-3 w-full hover:bg-muted/50 p-1.5 transition-colors">
-                                <span className="text-muted-foreground font-bold shrink-0 text-xs tabular-nums mt-0.5">{time}</span>
+                            <div key={i} className="flex items-start gap-3 w-full hover:bg-primary/5 p-1.5 transition-colors">
+                                <span className="text-primary/60 font-serif italic shrink-0 text-[10px] tabular-nums mt-0.5">{time}</span>
 
                                 <span className={cn(
-                                    "shrink-0 inline-flex items-center justify-center px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider border border-border min-w-[80px] text-center",
+                                    "shrink-0 inline-flex items-center justify-center px-2 py-0.5 text-[9px] font-display font-bold uppercase tracking-widest border border-primary/20 min-w-[80px] text-center rounded text-primary bg-primary/10",
+                                    // Optionally override background based on node if desired, but stripping brutal colors fits better.
+                                    // For now, keeping the nodeColor as an override.
                                     getNodeColor(log.node)
                                 )}>
                                     {log.node}
