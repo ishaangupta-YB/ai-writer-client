@@ -76,7 +76,7 @@ mkdir -p functions/api
 // Proxy all /api/* requests to the backend ALB
 // [[path]] is a Cloudflare Pages catch-all route segment
 
-const BACKEND_ORIGIN = "http://blog-writer-alb-1956679534.us-east-1.elb.amazonaws.com";
+const BACKEND_ORIGIN = "";
 
 export const onRequest: PagesFunction = async (context) => {
   const url = new URL(context.request.url);
@@ -121,7 +121,7 @@ name = "ai-blog-writer"
 compatibility_date = "2025-01-01"
 
 [vars]
-BACKEND_ORIGIN = "http://blog-writer-alb-1956679534.us-east-1.elb.amazonaws.com"
+BACKEND_ORIGIN = ""
 
 # Pages will auto-detect the build output directory
 ```
@@ -228,7 +228,7 @@ In the **Cloudflare Dashboard → Pages → ai-blog-writer → Settings → Envi
 
 | Variable | Value | Scope |
 |----------|-------|-------|
-| `BACKEND_ORIGIN` | `http://blog-writer-alb-1956679534.us-east-1.elb.amazonaws.com` | Production |
+| `BACKEND_ORIGIN` | `` | Production |
 | `VITE_API_URL` | `/api` | Production (build-time) |
 
 > `BACKEND_ORIGIN` is used by the Pages Function at runtime.
