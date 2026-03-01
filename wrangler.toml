@@ -1,0 +1,5 @@
+name = "ai-blog-writer"
+compatibility_date = "2025-01-01"
+
+# BACKEND_ORIGIN must be set via Cloudflare Dashboard → Pages → Settings → Environment variables.
+# Do NOT commit the real backend URL to a public repo.
