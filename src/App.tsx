@@ -112,12 +112,12 @@ function HomeView() {
         <div className="w-full flex-1 flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-8 duration-700 ease-out z-20 relative bg-background/30 backdrop-blur-md">
           {/* Query Header */}
           <div className="w-full max-w-3xl mx-auto px-6 pt-12 pb-6 text-center">
-             
+
             <h2 className="text-3xl md:text-5xl font-display font-medium leading-tight text-foreground drop-shadow-sm">
               "{submittedTopic}"
             </h2>
           </div>
- 
+
 
           {/* Scrollable Progress */}
           <div className="flex-1 overflow-y-auto hide-scrollbar scroll-smooth px-4">
