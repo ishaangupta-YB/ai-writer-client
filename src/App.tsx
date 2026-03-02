@@ -93,10 +93,33 @@ function HomeView() {
                   Generate
                 </StatefulButton>
               </div>
-              <div className="mt-4 flex justify-center text-center">
+              <div className="mt-6 flex flex-col items-center justify-center gap-3">
+                <span className="text-xs font-serif italic text-muted-foreground/70 flex items-center gap-2 animate-pulse">
+                  ✧ Suggestions to inspire you ✧
+                </span>
+                <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
+                  {[
+                    "The philosophy of modern stoicism",
+                    "A guide to deep space exploration",
+                    "The evolution of classical architecture"
+                  ].map((suggestion, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => setTopic(suggestion)}
+                      className="px-4 py-1.5 rounded-full border border-border/40 bg-background/40 text-xs md:text-sm font-serif text-muted-foreground hover:text-primary hover:bg-primary/5 hover:border-primary/40 hover:-translate-y-0.5 hover:shadow-sm active:translate-y-0 transition-all duration-300 backdrop-blur-sm cursor-pointer animate-in fade-in slide-in-from-bottom-3"
+                      style={{ animationDelay: `${idx * 150 + 500}ms`, animationFillMode: 'both' }}
+                    >
+                      "{suggestion}"
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-6 flex justify-center text-center">
                 <p className="text-xs font-serif text-muted-foreground italic flex items-center gap-2">
                   Press
-                  <kbd className="px-2 py-0.5 rounded border border-border/60 bg-background/50 text-[10px] font-sans text-primary">
+                  <kbd className="px-2 py-0.5 rounded border border-border/60 bg-background/50 text-[10px] font-sans text-primary shadow-sm">
                     Enter
                   </kbd>
                   to manifest your article
