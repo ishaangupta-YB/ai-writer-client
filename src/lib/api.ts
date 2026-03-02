@@ -21,7 +21,14 @@ export function startBlogGeneration(
             });
 
             if (!response.ok) {
-                throw new Error(`Failed to start generation: ${response.statusText}`);
+                let message = response.statusText;
+                try {
+                    const body = await response.json();
+                    if (body.detail) message = body.detail;
+                } catch {
+                    // Response body wasn't JSON — use statusText
+                }
+                throw new Error(message);
             }
 
             const reader = response.body?.getReader();
